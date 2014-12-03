@@ -38,6 +38,7 @@ public:
     ~NmeaClient();
 
 signals:
+    void newMessage(QString message);
 
 private slots:
     void connected(void);
@@ -52,7 +53,6 @@ private:
 
     bool is_connected;
     bool is_running;
-
 };
 
 #endif // NMEA_CLIENT_H

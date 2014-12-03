@@ -91,11 +91,10 @@ void NmeaClient::disconnected(void)
 void NmeaClient::dataAvailable(void)
 {
     QByteArray data = socket->readAll();
-    QString data_str = QString(data);
+    QString data_str = QString(data).trimmed();
 
     qDebug() << __func__ << ":" << data_str;
 
-    // parse_daat()
-    // emit some_signal();
+    emit newMessage(data_str);
 
 }

@@ -19,7 +19,12 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#include <QDebug>
+#include <QString>
+
 #include "mainwindow.h"
+#include "nmea_client.h"
+
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -27,9 +32,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    client = new NmeaClient("localhost", 45000);
+    connect(client, SIGNAL(newMessage(QString)), this,
+            SLOT(processNmeaMessage(QString)));
 }
 
 MainWindow::~MainWindow()
 {
+    delete client;
+
     delete ui;
+}
+
+void MainWindow::processNmeaMessage(QString nmea_msg)
+{
+    qDebug() << nmea_msg;
 }

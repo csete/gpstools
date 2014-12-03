@@ -23,6 +23,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QString>
+
+#include "nmea_client.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -36,8 +40,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+    void processNmeaMessage(QString nmea_msg);
+
 private:
     Ui::MainWindow *ui;
+
+    NmeaClient *client;
 };
 
 #endif // MAINWINDOW_H
