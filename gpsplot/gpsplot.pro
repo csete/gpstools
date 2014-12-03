@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui printsupport
+QT       += core gui network printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    qcustomplot/qcustomplot.cpp
+    qcustomplot/qcustomplot.cpp \
+    nmea_client.cpp
 
 HEADERS  += mainwindow.h \
-    qcustomplot/qcustomplot.h
+    qcustomplot/qcustomplot.h \
+    nmea_client.h
 
 FORMS    += mainwindow.ui
