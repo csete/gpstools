@@ -11,7 +11,7 @@ SMPLS = $(SAMPLES:%=samples_%)
 SMPLOBJ = $(SAMPLES:%=samples/%/main.o)
 
 INCS = -I include 
-LIBS = -lm -Llib -lnmea
+LIBS = -Llib -lnmea -lm
  
 .PHONY: all all-before all-after clean clean-custom doc
  
