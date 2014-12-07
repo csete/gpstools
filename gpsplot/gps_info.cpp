@@ -19,40 +19,37 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "gps_info.h"
+#include "ui_gps_info.h"
 
-#include <QMainWindow>
-#include <QString>
-
-#include <nmea/nmea.h>
-
-#include "nmea_client.h"
-
-
-namespace Ui {
-class MainWindow;
+GpsInfo::GpsInfo(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::GpsInfo)
+{
+    ui->setupUi(this);
 }
 
-class MainWindow : public QMainWindow
+GpsInfo::~GpsInfo()
 {
-    Q_OBJECT
+    delete ui;
+}
 
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+void GpsInfo::setLatLonAlt(double lat, double lon, double alt)
+{
+    ui->gpsLatValue->setText(QString("%1 °").arg(lat));
+    ui->gpsLonValue->setText(QString("%1 °").arg(lon));
+    ui->gpsAltValue->setText(QString("%1 m").arg(alt));
+}
 
-private slots:
-    void processNmeaMessage(QString nmea_msg);
 
-private:
-    Ui::MainWindow *ui;
+const char * nmea_sig_str[] = {"BAD", "LOW", "MID", "HIGH"};
+const char * nmea_fix_str[] = {"?", "BAD", "2D", "3D"};
 
-    NmeaClient *client;
+void GpsInfo::setStatus(int sig, int fix)
+{
+    if (sig >= 0 && sig <= 3)
+        ui->gpsSigValue->setText(nmea_sig_str[sig]);
 
-    nmeaINFO    nmea_info;
-    nmeaPARSER  nmea_parser;
-
-};
-
-#endif // MAINWINDOW_H
+    if (fix >= 0 && fix <= 3)
+        ui->gpsFixValue->setText(nmea_fix_str[fix]);
+}

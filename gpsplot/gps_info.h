@@ -19,40 +19,28 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef GPS_INFO_H
+#define GPS_INFO_H
 
-#include <QMainWindow>
-#include <QString>
-
-#include <nmea/nmea.h>
-
-#include "nmea_client.h"
-
+#include <QWidget>
 
 namespace Ui {
-class MainWindow;
+class GpsInfo;
 }
 
-class MainWindow : public QMainWindow
+class GpsInfo : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit GpsInfo(QWidget *parent = 0);
+    ~GpsInfo();
 
-private slots:
-    void processNmeaMessage(QString nmea_msg);
+    void setLatLonAlt(double lat, double lon, double alt);
+    void setStatus(int sig, int fix);
 
 private:
-    Ui::MainWindow *ui;
-
-    NmeaClient *client;
-
-    nmeaINFO    nmea_info;
-    nmeaPARSER  nmea_parser;
-
+    Ui::GpsInfo *ui;
 };
 
-#endif // MAINWINDOW_H
+#endif // GPS_INFO_H

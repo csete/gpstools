@@ -91,9 +91,11 @@ void NmeaClient::disconnected(void)
 void NmeaClient::dataAvailable(void)
 {
     QByteArray data = socket->readAll();
-    QString data_str = QString(data).trimmed();
 
-    qDebug() << __func__ << ":" << data_str;
+    // FIXME: we should probalby fix the lack of \r in gps2net
+    QString data_str = QString(data).trimmed().append("\r\n");
+
+    //qDebug() << __func__ << ":" << data_str;
 
     emit newMessage(data_str);
 

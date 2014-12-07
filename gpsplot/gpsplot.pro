@@ -10,15 +10,23 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = gpsplot
 TEMPLATE = app
+INCLUDEPATH += ../nmealib/include/
+#LIBS += /home/alc/gps/gpstools.git/nmealib/lib/libnmea.a
+LIBS += ../nmealib/lib/libnmea.a
 
-
-SOURCES += main.cpp\
-        mainwindow.cpp \
+SOURCES += \
+    main.cpp \
+    mainwindow.cpp \
+    nmea_client.cpp \
     qcustomplot/qcustomplot.cpp \
-    nmea_client.cpp
+    gps_info.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
+    mainwindow.h \
+    nmea_client.h \
     qcustomplot/qcustomplot.h \
-    nmea_client.h
+    gps_info.h
 
-FORMS    += mainwindow.ui
+
+FORMS    += mainwindow.ui \
+    gps_info.ui
