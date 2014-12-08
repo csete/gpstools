@@ -25,6 +25,8 @@
 #include <QMainWindow>
 #include <QString>
 
+#include <time.h>
+
 #include <nmea/nmea.h>
 
 #include "nmea_client.h"
@@ -50,9 +52,9 @@ private:
 
     NmeaClient *client;
 
+    time_t      timestamp;      // time stamp of the data
     nmeaINFO    nmea_info;
     nmeaPARSER  nmea_parser;
-
 };
 
 #endif // MAINWINDOW_H

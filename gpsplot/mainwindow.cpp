@@ -21,6 +21,7 @@
  */
 #include <QDebug>
 #include <QString>
+#include <time.h>
 
 #include <nmea/nmea.h>
 
@@ -49,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    client = new NmeaClient("192.168.1.113", 45000);
+    client = new NmeaClient("localhost", 45000);
     connect(client, SIGNAL(newMessage(QString)), this,
             SLOT(processNmeaMessage(QString)));
 
@@ -57,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //nmea_property()->trace_func = &trace;
     //nmea_property()->error_func = &error;
 
+    timestamp = 0;
     nmea_zero_INFO(&nmea_info);
     nmea_parser_init(&nmea_parser);
 
@@ -68,6 +70,20 @@ MainWindow::~MainWindow()
 
     delete client;
     delete ui;
+}
+
+time_t _gps_time(nmeaINFO * info)
+{
+    struct tm t;
+
+    t.tm_year = info->utc.year;     // since 1900
+    t.tm_mon  = info->utc.mon;      // since january
+    t.tm_mday = info->utc.day;
+    t.tm_hour = info->utc.hour;
+    t.tm_min  = info->utc.min;
+    t.tm_sec  = info->utc.sec;
+
+    return mktime(&t);
 }
 
 /**
@@ -82,13 +98,20 @@ void MainWindow::processNmeaMessage(QString nmea_msg)
     nmea_parse(&nmea_parser, ba.data(), ba.size(), &nmea_info);
     nmea_info2pos(&nmea_info, &nmea_pos);
 
-    ui->gpsInfoText->setLatLonAlt(nmea_radian2degree(nmea_pos.lat),
-                                    nmea_radian2degree(nmea_pos.lon),
-                                    nmea_info.elv);
-    ui->gpsInfoText->setStatus(nmea_info.sig, nmea_info.fix);
+    time_t current_time = _gps_time(&nmea_info);
 
-    qDebug() << QString("%1:%2:%3").arg(nmea_info.utc.hour).arg(nmea_info.utc.min).arg(nmea_info.utc.sec) <<
-                nmea_info.sig << nmea_info.fix <<
-                nmea_radian2degree(nmea_pos.lat) << nmea_radian2degree(nmea_pos.lon) << nmea_info.elv <<
-                nmea_info.speed << nmea_info.direction;
+    if (current_time != timestamp)
+    {
+        timestamp = current_time;
+        ui->gpsInfoText->setLatLonAlt(nmea_radian2degree(nmea_pos.lat),
+                                        nmea_radian2degree(nmea_pos.lon),
+                                        nmea_info.elv);
+        ui->gpsInfoText->setStatus(nmea_info.sig, nmea_info.fix);
+
+        qDebug() << current_time << ":" << nmea_info.sig << nmea_info.fix <<
+                    nmea_radian2degree(nmea_pos.lat) <<
+                    nmea_radian2degree(nmea_pos.lon) <<
+                    nmea_info.elv << nmea_info.speed << nmea_info.direction;
+
+    }
 }
